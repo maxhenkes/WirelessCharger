@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "wificharge:wirelesscharger"
+  },
+  "pattern": [
+    "aaa",
+    "afa",
+    "ded"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_block"
+    },
+    "f": {
+      "item": "minecraft:diamond_block"
+    },
+    "e": {
+      "item": "minecraft:redstone_block"
+    },
+    "d": {
+      "item": "minecraft:comparator"
+    }
+  }
+}

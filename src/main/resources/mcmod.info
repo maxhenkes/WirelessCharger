@@ -1,0 +1,16 @@
+[
+{
+  "modid": "wificharge",
+  "name": "Wireless Charger",
+  "description": "Adds things.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["CreeperShift"],
+  "credits": "Me",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
