@@ -21,7 +21,7 @@ public class IC2Compat {
         calculates the cost and returns the accepted energy as RF.
          */
 
-        return 4 * (int) getManager(stack).charge(stack, energy / Config.conversionRate, tier, ignoreChargeLimit, simulate);
+        return Config.conversionRate * (int) getManager(stack).charge(stack, energy / Config.conversionRate, tier, ignoreChargeLimit, simulate);
     }
 
     private static IElectricItemManager getManager(ItemStack stack) {
