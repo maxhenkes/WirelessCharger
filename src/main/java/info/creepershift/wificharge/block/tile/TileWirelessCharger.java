@@ -23,16 +23,16 @@ public class TileWirelessCharger extends TileEntity implements ITickable {
 
     private final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.blockCapacity, Config.maxInput, Config.maxOutput);
     private int counter = 0;
-    private boolean hasRedstone = true;
+    private boolean hasRedstone = false;
 
     public TileWirelessCharger() {
     }
 
     @Override
     public void update() {
-        if (!hasRedstone && !world.isRemote) {
+        if (!hasRedstone && !world.isRemote && storage.getEnergyStored() >= 5000) {
             if (Config.isPerformance) {
-                if (counter >= 20 && storage.getEnergyStored() >= 5000) {
+                if (counter >= 20) {
                     getItems();
                     counter = 0;
                 }
@@ -47,7 +47,7 @@ public class TileWirelessCharger extends TileEntity implements ITickable {
         List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPos().add(-Config.wirelessRange, -Config.wirelessRange, -Config.wirelessRange), getPos().add(Config.wirelessRange, Config.wirelessRange, Config.wirelessRange)));
 
         for (EntityPlayer player : list) {
-            chargeItems(Arrays.<NonNullList<ItemStack>>asList(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory), player);
+            chargeItems(Arrays.asList(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory), player);
         }
 
     }
