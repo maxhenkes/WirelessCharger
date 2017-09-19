@@ -1,7 +1,9 @@
 package info.creepershift.wificharge;
 
+import info.creepershift.wificharge.block.BlockPersonalCharger;
 import info.creepershift.wificharge.block.BlockRegistry;
 import info.creepershift.wificharge.block.BlockWirelessCharger;
+import info.creepershift.wificharge.block.tile.TilePersonalCharger;
 import info.creepershift.wificharge.block.tile.TileWirelessCharger;
 import info.creepershift.wificharge.client.gui.GuiProxy;
 import info.creepershift.wificharge.config.Config;
@@ -28,12 +30,16 @@ public class CommonProxy {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(new BlockWirelessCharger());
+        event.getRegistry().register(new BlockPersonalCharger());
+
         GameRegistry.registerTileEntity(TileWirelessCharger.class, Reference.MODID + "_wirelesschargertile");
+        GameRegistry.registerTileEntity(TilePersonalCharger.class, Reference.MODID + "_personalchargertile");
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(new ItemBlock(BlockRegistry.blockWirelessCharger).setRegistryName(BlockRegistry.blockWirelessCharger.getRegistryName()));
+        event.getRegistry().register(new ItemBlock(BlockRegistry.blockPersonalCharger).setRegistryName(BlockRegistry.blockPersonalCharger.getRegistryName()));
     }
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -52,5 +58,4 @@ public class CommonProxy {
             config.save();
         }
     }
-
 }
