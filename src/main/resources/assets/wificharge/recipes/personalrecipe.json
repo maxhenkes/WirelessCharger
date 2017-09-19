@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "wificharge:personalcharger"
+  },
+  "pattern": [
+    "aaa",
+    "afa",
+    "ded"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "a": {
+      "item": "minecraft:ender_pearl"
+    },
+    "f": {
+      "item": "minecraft:compass"
+    },
+    "e": {
+      "item": "wificharge:wirelesscharger"
+    },
+    "d": {
+      "item": "minecraft:redstone_block"
+    }
+  }
+}

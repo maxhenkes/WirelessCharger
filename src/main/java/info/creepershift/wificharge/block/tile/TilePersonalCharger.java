@@ -46,9 +46,6 @@ public class TilePersonalCharger extends TileEntity implements ITickable {
     }
 
     private void chargeItems(EntityPlayerMP player) {
-
-        boolean otherWorldCost = Config.dimensionCost && player.getEntityWorld() != world;
-
         List<NonNullList<ItemStack>> list = Arrays.asList(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory);
 
         for (NonNullList<ItemStack> inventoryList : list) {
@@ -58,6 +55,7 @@ public class TilePersonalCharger extends TileEntity implements ITickable {
                     int maxOut = Config.personalMaxOutput;
                     int stored = storage.getEnergyStored();
                     boolean reachedLimit = false;
+                    boolean otherWorldCost = Config.dimensionCost && player.getEntityWorld() != world;
 
                     if (Config.personalRangeCost && !otherWorldCost) {
                         maxOut = (int) Math.floor(outputByRange(player, Config.personalMaxOutput, getPos()));

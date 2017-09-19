@@ -85,7 +85,7 @@ public class Config {
         transferDimension = config.getBoolean("transferDimension", CATEGORY_PERSONAL_CHARGER, transferDimension, "Allow the personal charger to charge your items in another dimension.");
         dimensionCost = config.getBoolean("dimensionCost", CATEGORY_PERSONAL_CHARGER, dimensionCost, "Extra cost when charging in another dimension?");
         personalRangeCost = config.getBoolean("personalRangeCost", CATEGORY_PERSONAL_CHARGER, personalRangeCost, "Calculate extra cost based on range to the personal charger?");
-        dimensionRate = config.getInt("dimensionRate", CATEGORY_PERSONAL_CHARGER, dimensionRate, 1, 99, "Increase cost by % when in another dimension. Range cost is not applied in another dimension.");
+        dimensionRate = config.getInt("dimensionRate", CATEGORY_PERSONAL_CHARGER, dimensionRate, 1, Integer.MAX_VALUE, "Increase cost by % when in another dimension. Range cost is not applied in another dimension.");
         rangeRate = config.getInt("rangeRate", CATEGORY_PERSONAL_CHARGER, rangeRate, 1, Integer.MAX_VALUE, "The modifier that determines the charge cost, (cost * (1+(MODIFIER/1000) * (range/100))) Charge cost will only increase for every 100 blocks.");
         rangeHardLimit = config.getBoolean("rangeHardLimit", CATEGORY_PERSONAL_CHARGER, rangeHardLimit, "Disable this if you want to increase the charge cost to a point where the charger will not be able to charge the item anymore because the charge cost is higher than the maxOutput after a huge range");
         personalMaxOutput = config.getInt("personalMaxOutput", CATEGORY_PERSONAL_CHARGER, personalMaxOutput, 1, Integer.MAX_VALUE, "Personal Charger internal storage in RF");
