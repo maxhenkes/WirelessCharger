@@ -22,9 +22,9 @@ public class Config {
     public static int maxInput = 250000;
     public static int dimensionRate = 50;
     public static int rangeRate = 5;
-    public static int personalMaxOutput = 250000;
-    public static int personalMaxInput = 250000;
-    public static int personalCapacity = 5000000;
+    public static int personalMaxOutput = 100000;
+    public static int personalMaxInput = 100000;
+    public static int personalCapacity = 2000000;
 
     public static boolean wirelessRangeEnergy = true;
     public static boolean ignoreBlocks = true;
@@ -87,7 +87,7 @@ public class Config {
         personalRangeCost = config.getBoolean("personalRangeCost", CATEGORY_PERSONAL_CHARGER, personalRangeCost, "Calculate extra cost based on range to the personal charger?");
         dimensionRate = config.getInt("dimensionRate", CATEGORY_PERSONAL_CHARGER, dimensionRate, 1, 99, "Increase cost by % when in another dimension. Range cost is not applied in another dimension.");
         rangeRate = config.getInt("rangeRate", CATEGORY_PERSONAL_CHARGER, rangeRate, 1, Integer.MAX_VALUE, "The modifier that determines the charge cost, (cost * (1+(MODIFIER/1000) * (range/100))) Charge cost will only increase for every 100 blocks.");
-        rangeHardLimit = config.getBoolean("rangeHardLimit", CATEGORY_PERSONAL_CHARGER, rangeHardLimit, "Disable this if you want to increase the charge cost to a point where the charger will not be able to charge the item anymore because the charge cost is higher than the maxOutput after a certain range");
+        rangeHardLimit = config.getBoolean("rangeHardLimit", CATEGORY_PERSONAL_CHARGER, rangeHardLimit, "Disable this if you want to increase the charge cost to a point where the charger will not be able to charge the item anymore because the charge cost is higher than the maxOutput after a huge range");
         personalMaxOutput = config.getInt("personalMaxOutput", CATEGORY_PERSONAL_CHARGER, personalMaxOutput, 1, Integer.MAX_VALUE, "Personal Charger internal storage in RF");
         personalMaxInput = config.getInt("personalMaxInput", CATEGORY_PERSONAL_CHARGER, personalMaxInput, 1, Integer.MAX_VALUE, "Personal Charger max output in RF/t");
         personalCapacity = config.getInt("personalCapacity", CATEGORY_PERSONAL_CHARGER, personalCapacity, 1, Integer.MAX_VALUE, "Personal Charger max input in RF/t");

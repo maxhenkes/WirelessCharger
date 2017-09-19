@@ -27,6 +27,11 @@ public class TilePersonalCharger extends TileEntity implements ITickable {
     private final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.personalCapacity, Config.personalMaxInput, Config.personalMaxOutput);
     private boolean hasRedstone = false;
     private UUID playerUUID;
+    private int hardLimit;
+
+    public TilePersonalCharger() {
+        hardLimit = (int) (Config.personalMaxOutput * 0.1f);
+    }
 
     @Override
     public void update() {
@@ -52,10 +57,18 @@ public class TilePersonalCharger extends TileEntity implements ITickable {
 
                     int maxOut = Config.personalMaxOutput;
                     int stored = storage.getEnergyStored();
+                    boolean reachedLimit = false;
 
                     if (Config.personalRangeCost && !otherWorldCost) {
                         maxOut = (int) Math.floor(outputByRange(player, Config.personalMaxOutput, getPos()));
                         stored = (int) Math.floor(outputByRange(player, stored, getPos()));
+
+                        if (Config.rangeHardLimit && maxOut < hardLimit) {
+                            maxOut = hardLimit;
+                            stored = (int)(stored * 0.1f);
+                            reachedLimit = true;
+                        }
+
                     } else if (otherWorldCost) {
                         maxOut = (int) Math.floor(outputByDimension(Config.personalMaxOutput));
                         stored = (int) Math.floor(outputByDimension(stored));
@@ -66,7 +79,9 @@ public class TilePersonalCharger extends TileEntity implements ITickable {
 
                     if (energy > 0) {
 
-                        if (Config.personalRangeCost && !otherWorldCost) {
+                        if (reachedLimit) {
+                            cost = (int)(cost/0.1f);
+                        } else if (Config.personalRangeCost && !otherWorldCost) {
                             cost = (int) costByRange(player, energy, getPos());
                         } else if (otherWorldCost) {
                             cost = (int) Math.floor(costByDimension(energy));
