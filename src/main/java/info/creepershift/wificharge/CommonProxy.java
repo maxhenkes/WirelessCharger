@@ -5,7 +5,6 @@ import info.creepershift.wificharge.block.BlockRegistry;
 import info.creepershift.wificharge.block.BlockWirelessCharger;
 import info.creepershift.wificharge.block.tile.TilePersonalCharger;
 import info.creepershift.wificharge.block.tile.TileWirelessCharger;
-import info.creepershift.wificharge.client.gui.GuiProxy;
 import info.creepershift.wificharge.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -17,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.io.File;
@@ -49,7 +47,6 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiProxy());
     }
 
 

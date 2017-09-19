@@ -21,7 +21,7 @@ public class Config {
     public static int maxOutput = 250000;
     public static int maxInput = 250000;
     public static int dimensionRate = 50;
-    public static int rangeRate = 10;
+    public static int rangeRate = 5;
     public static int personalMaxOutput = 250000;
     public static int personalMaxInput = 250000;
     public static int personalCapacity = 5000000;
