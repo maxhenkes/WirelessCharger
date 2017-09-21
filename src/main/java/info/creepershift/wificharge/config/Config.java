@@ -20,7 +20,7 @@ public class Config {
     public static int blockCapacity = 5000000;
     public static int maxOutput = 250000;
     public static int maxInput = 250000;
-    public static int dimensionRate = 50;
+    public static int dimensionRate = 350;
     public static int rangeRate = 5;
     public static int personalMaxOutput = 100000;
     public static int personalMaxInput = 100000;

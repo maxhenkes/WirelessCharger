@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class TileWirelessCharger extends TileEntity implements ITickable {
+public class TileWirelessCharger extends TileEntityBase implements ITickable {
 
     private final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.blockCapacity, Config.maxInput, Config.maxOutput);
     private int counter = 0;
@@ -138,6 +138,10 @@ public class TileWirelessCharger extends TileEntity implements ITickable {
         return compound;
     }
 
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        // If we are too far away from this tile entity you cannot use it
+        return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+    }
 
 
 
