@@ -1,6 +1,7 @@
 package info.creepershift.wificharge;
 
 import info.creepershift.wificharge.block.BlockRegistry;
+import info.creepershift.wificharge.item.ItemRegistry;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -31,6 +32,7 @@ public class ClientProxy extends CommonProxy {
     public static void registerModels(ModelRegistryEvent event){
         BlockRegistry.blockWirelessCharger.initModel();
         BlockRegistry.blockPersonalCharger.initModel();
+        ItemRegistry.itemUpgradeRange.initModel();
     }
 
 

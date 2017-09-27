@@ -8,7 +8,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -34,8 +33,7 @@ public class BlockWirelessCharger extends BlockBase implements ITileEntityProvid
         setUnlocalizedName(Reference.MODID + ".wirelesscharger");
         setRegistryName("wirelesscharger");
         setHardness(3);
-        setCreativeTab(CreativeTabs.REDSTONE);
-        setHarvestLevel("pickaxe", 1);
+        setHarvestLevel("pickaxe", 0);
     }
 
     @Nullable

@@ -1,4 +1,4 @@
 package info.creepershift.wificharge.item;
 
-public class ItemUpgradeBase {
+public class ItemUpgradeBase extends ItemBase{
 }

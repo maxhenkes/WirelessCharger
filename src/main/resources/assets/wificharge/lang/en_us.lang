@@ -1,2 +1,4 @@
 tile.wificharge.wirelesscharger.name=Wireless Charger
 tile.wificharge.personalcharger.name=Personal Charger
+itemGroup.creativetab=Wireless Charger Tab
+item.wificharge.itemupgrade_range.name=Range Upgrade

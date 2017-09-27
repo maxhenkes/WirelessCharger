@@ -7,6 +7,8 @@ import info.creepershift.wificharge.block.tile.TilePersonalCharger;
 import info.creepershift.wificharge.block.tile.TileWirelessCharger;
 import info.creepershift.wificharge.client.gui.GuiProxy;
 import info.creepershift.wificharge.config.Config;
+import info.creepershift.wificharge.inventory.CreativeTabCustom;
+import info.creepershift.wificharge.item.ItemUpgradeRange;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -40,12 +42,14 @@ public class CommonProxy {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(new ItemBlock(BlockRegistry.blockWirelessCharger).setRegistryName(BlockRegistry.blockWirelessCharger.getRegistryName()));
         event.getRegistry().register(new ItemBlock(BlockRegistry.blockPersonalCharger).setRegistryName(BlockRegistry.blockPersonalCharger.getRegistryName()));
+        event.getRegistry().register(new ItemUpgradeRange());
     }
 
     public void preInit(FMLPreInitializationEvent event) {
         File directory = event.getModConfigurationDirectory();
         config = new Configuration(new File(directory.getPath(), "wificharge.cfg"));
         Config.readConfig();
+        CreativeTabCustom.registerTab();
     }
 
     public void init(FMLInitializationEvent event) {
