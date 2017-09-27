@@ -1,5 +1,6 @@
 package info.creepershift.wificharge.block.tile;
 
+import info.creepershift.api.machine.IUpgradableMachine;
 import info.creepershift.wificharge.config.Config;
 import info.creepershift.wificharge.util.EnergyHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,16 +16,18 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class TileWirelessCharger extends TileEntityBase implements ITickable {
+public class TileWirelessCharger extends TileEntityBase implements ITickable, IUpgradableMachine {
 
     public final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.blockCapacity, Config.maxInput, Config.maxOutput);
     private int counter = 0;
     private boolean hasRedstone = false;
+    private static final int SIZE = 3;
 
     public TileWirelessCharger() {
     }
@@ -44,6 +47,16 @@ public class TileWirelessCharger extends TileEntityBase implements ITickable {
             }
         }
     }
+
+    // This item handler will hold our nine inventory slots
+    private ItemStackHandler itemStackHandler = new ItemStackHandler(SIZE) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            // We need to tell the tile entity that something has changed so
+            // that the chest contents is persisted
+            TileWirelessCharger.this.markDirty();
+        }
+    };
 
     private void getItems() {
         List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(getPos().add(-Config.wirelessRange, -Config.wirelessRange, -Config.wirelessRange), getPos().add(Config.wirelessRange, Config.wirelessRange, Config.wirelessRange)));
@@ -131,12 +144,16 @@ public class TileWirelessCharger extends TileEntityBase implements ITickable {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         storage.readFromNBT(compound);
+        if (compound.hasKey("items")) {
+            itemStackHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
+        }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         storage.writeToNBT(compound);
+        compound.setTag("items", itemStackHandler.serializeNBT());
         return compound;
     }
 
@@ -162,4 +179,10 @@ public class TileWirelessCharger extends TileEntityBase implements ITickable {
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         this.readFromNBT(packet.getNbtCompound());
     }
+
+    @Override
+    public ItemStackHandler getUpgradeStackHandler(){
+        return itemStackHandler;
+    }
+
 }

@@ -39,6 +39,7 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
     private GameProfile playerProfile;
     private static PlayerProfileCache profileCache;
     private static MinecraftSessionService sessionService;
+    public static final int SIZE = 3;
 
     public TilePersonalCharger() {
         hardLimit = (int) (Config.personalMaxOutput * 0.1f);

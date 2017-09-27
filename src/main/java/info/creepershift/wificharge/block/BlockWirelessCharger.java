@@ -84,7 +84,6 @@ public class BlockWirelessCharger extends BlockBase implements ITileEntityProvid
             return false;
         }
         playerIn.openGui(Main.instance, GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        Main.logger.info("Gui tried to open");
         return true;
     }
 

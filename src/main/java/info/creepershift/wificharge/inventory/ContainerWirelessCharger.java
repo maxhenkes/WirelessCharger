@@ -4,11 +4,10 @@ import info.creepershift.wificharge.block.tile.TileEntityBase;
 import info.creepershift.wificharge.block.tile.TileWirelessCharger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 
-public class ContainerWirelessCharger extends Container {
+public class ContainerWirelessCharger extends ContainerBase {
 
     private final TileWirelessCharger tileWirelessCharger;
 
@@ -17,6 +16,7 @@ public class ContainerWirelessCharger extends Container {
         tileWirelessCharger = (TileWirelessCharger) tile;
         InventoryPlayer inventory = player.inventory;
         addPlayerSlots(inventory);
+        addUpgradeSlots(((TileWirelessCharger) tile).getUpgradeStackHandler());
     }
 
     @Override

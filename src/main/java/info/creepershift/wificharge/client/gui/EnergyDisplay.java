@@ -20,58 +20,40 @@ public class EnergyDisplay extends Gui {
     private ForgeEnergyImpl storage;
     private int x;
     private int y;
-    private boolean outline;
-    private boolean drawTextNextTo;
 
-    private final ResourceLocation location = new ResourceLocation(Reference.MODID, "textures/gui/gui_inventory.png");
+    private final ResourceLocation location = new ResourceLocation(Reference.MODID, "textures/gui/gui_energy.png");
 
-    public EnergyDisplay(int x, int y, ForgeEnergyImpl storage, boolean outline, boolean drawTextNextTo){
-        this.setData(x, y, storage, outline, drawTextNextTo);
+    public EnergyDisplay(int x, int y, ForgeEnergyImpl storage) {
+        this.setData(x, y, storage);
     }
 
-    public EnergyDisplay(int x, int y, ForgeEnergyImpl storage){
-        this(x, y, storage, false, false);
-    }
-
-    public void setData(int x, int y, ForgeEnergyImpl storage, boolean outline, boolean drawTextNextTo){
+    public void setData(int x, int y, ForgeEnergyImpl storage) {
         this.x = x;
         this.y = y;
         this.storage = storage;
-        this.outline = outline;
-        this.drawTextNextTo = drawTextNextTo;
     }
 
-    public void draw(){
+    public void draw() {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(location);
 
         int barX = this.x;
         int barY = this.y;
 
-        if(this.outline){
-            this.drawTexturedModalRect(this.x, this.y, 52, 163, 26, 93);
+        this.drawTexturedModalRect(barX, barY, 16, 0, 26, 74);
 
-            barX += 4;
-            barY += 4;
-        }
-        this.drawTexturedModalRect(barX, barY, 18, 171, 18, 85);
+        if (this.storage.getEnergyStored() > 0) {
+            int i = this.storage.getEnergyStored() * 64 / this.storage.getMaxEnergyStored();
 
-        if(this.storage.getEnergyStored() > 0){
-            int i = this.storage.getEnergyStored()*83/this.storage.getMaxEnergyStored();
-
-            float[] color = getWheelColor(mc.world.getTotalWorldTime()%256);
-            GlStateManager.color(color[0]/255F, color[1]/255F, color[2]/255F);
-            this.drawTexturedModalRect(barX+1, barY+84-i, 36, 172, 16, i);
+            float[] color = getWheelColor(mc.world.getTotalWorldTime() % 256);
+            GlStateManager.color(color[0] / 255F, color[1] / 255F, color[2] / 255F);
+            this.drawTexturedModalRect(barX + 5, barY + 69 - i, 0, 0, 16, i);
             GlStateManager.color(1F, 1F, 1F);
-        }
-
-        if(this.drawTextNextTo){
-            this.drawString(mc.fontRenderer, this.getOverlayText(), barX+25, barY+78, 16777215);
         }
     }
 
-    public void drawOverlay(int mouseX, int mouseY){
-        if(this.isMouseOver(mouseX, mouseY)){
+    public void drawOverlay(int mouseX, int mouseY) {
+        if (this.isMouseOver(mouseX, mouseY)) {
             Minecraft mc = Minecraft.getMinecraft();
 
             List<String> text = new ArrayList<String>();
@@ -80,23 +62,23 @@ public class EnergyDisplay extends Gui {
         }
     }
 
-    private boolean isMouseOver(int mouseX, int mouseY){
-        return mouseX >= this.x && mouseY >= this.y && mouseX < this.x+(this.outline ? 26 : 18) && mouseY < this.y+(this.outline ? 93 : 85);
+    private boolean isMouseOver(int mouseX, int mouseY) {
+        return mouseX >= this.x && mouseY >= this.y && mouseX < this.x + 18 && mouseY < this.y + 85;
     }
 
-    private String getOverlayText(){
+    private String getOverlayText() {
         NumberFormat format = NumberFormat.getInstance();
         return String.format("%s/%s RF", format.format(this.storage.getEnergyStored()), format.format(this.storage.getMaxEnergyStored()));
     }
 
-    public static float[] getWheelColor(float pos){
-        if(pos < 85.0f){
-            return new float[]{pos*3.0F, 255.0f-pos*3.0f, 0.0f};
+    public static float[] getWheelColor(float pos) {
+        if (pos < 85.0f) {
+            return new float[]{pos * 3.0F, 255.0f - pos * 3.0f, 0.0f};
         }
-        if(pos < 170.0f){
-            return new float[]{255.0f-(pos -= 85.0f)*3.0f, 0.0f, pos*3.0f};
+        if (pos < 170.0f) {
+            return new float[]{255.0f - (pos -= 85.0f) * 3.0f, 0.0f, pos * 3.0f};
         }
-        return new float[]{0.0f, (pos -= 170.0f)*3.0f, 255.0f-pos*3.0f};
+        return new float[]{0.0f, (pos -= 170.0f) * 3.0f, 255.0f - pos * 3.0f};
     }
 
 }

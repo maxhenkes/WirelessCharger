@@ -3,6 +3,7 @@ package info.creepershift.wificharge.client.gui;
 import info.creepershift.wificharge.Reference;
 import info.creepershift.wificharge.block.tile.TileEntityBase;
 import info.creepershift.wificharge.block.tile.TileWirelessCharger;
+import info.creepershift.wificharge.config.Config;
 import info.creepershift.wificharge.inventory.ContainerWirelessCharger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -28,12 +29,14 @@ public class GuiWirelessCharger extends GuiBase {
     @Override
     public void initGui() {
         super.initGui();
-        this.energy = new EnergyDisplay(this.guiLeft + 56, this.guiTop +5 , this.tileWirelessCharger.storage);
+        this.energy = new EnergyDisplay(this.guiLeft + 5, this.guiTop +5 , this.tileWirelessCharger.storage);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+        String range = "Charging Range: " + Config.wirelessRange;
+        this.fontRenderer.drawString(range, this.guiLeft + this.xSize/2 - this.fontRenderer.getStringWidth(range)/2, this.guiTop + 8, 4210752);
         this.energy.drawOverlay(mouseX, mouseY);
     }
 
