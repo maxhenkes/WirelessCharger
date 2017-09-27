@@ -1,6 +1,8 @@
 package info.creepershift.wificharge.client.gui;
 
+import info.creepershift.wificharge.block.tile.TilePersonalCharger;
 import info.creepershift.wificharge.block.tile.TileWirelessCharger;
+import info.creepershift.wificharge.inventory.ContainerPersonalCharger;
 import info.creepershift.wificharge.inventory.ContainerWirelessCharger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -15,12 +17,16 @@ public class GuiProxy implements IGuiHandler {
     @Nullable
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        BlockPos pos = new BlockPos(x, y,z);
+        BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
-        if(te instanceof TileWirelessCharger){
-            return new ContainerWirelessCharger(player, (TileWirelessCharger)te);
+        switch (ID) {
+            case 1:
+                return new ContainerWirelessCharger(player, (TileWirelessCharger) te);
+            case 2:
+                return new ContainerPersonalCharger(player, (TilePersonalCharger) te);
+            default:
+                return null;
         }
-        return null;
     }
 
     @Nullable
@@ -28,11 +34,13 @@ public class GuiProxy implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
-        if(ID == 1) {
-            if (te instanceof TileWirelessCharger) {
+        switch (ID) {
+            case 1:
                 return new GuiWirelessCharger(player, (TileWirelessCharger) te);
-            }
-        }
-        return null;
+            case 2:
+                return new GuiPersonalCharger(player, (TilePersonalCharger) te);
+            default:
+                return null;
         }
     }
+}

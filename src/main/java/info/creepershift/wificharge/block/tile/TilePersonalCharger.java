@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
+import info.creepershift.api.machine.IUpgradableMachine;
 import info.creepershift.wificharge.Main;
 import info.creepershift.wificharge.config.Config;
 import info.creepershift.wificharge.util.EnergyHelper;
@@ -24,15 +25,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class TilePersonalCharger extends TileEntityBase implements ITickable {
+public class TilePersonalCharger extends TileEntityBase implements ITickable, IUpgradableMachine {
 
-    private final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.personalCapacity, Config.personalMaxInput, Config.personalMaxOutput);
+    public final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.personalCapacity, Config.personalMaxInput, Config.personalMaxOutput);
     private boolean hasRedstone = false;
     private UUID playerUUID;
     private int hardLimit;
@@ -44,6 +46,16 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
     public TilePersonalCharger() {
         hardLimit = (int) (Config.personalMaxOutput * 0.1f);
     }
+
+    // This item handler will hold our nine inventory slots
+    private ItemStackHandler itemStackHandler = new ItemStackHandler(SIZE) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            // We need to tell the tile entity that something has changed so
+            // that the chest contents is persisted
+            TilePersonalCharger.this.markDirty();
+        }
+    };
 
     @Override
     public void update() {
@@ -108,6 +120,11 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
         }
     }
 
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        // If we are too far away from this tile entity you cannot use it
+        return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
+    }
+
     private double outputByRange(EntityPlayer player, double energy, BlockPos pos) {
 
         BlockPos playerPos = player.getPosition();
@@ -166,7 +183,15 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         storage.readFromNBT(compound);
-        playerUUID = compound.getUniqueId("Player");
+        if(compound.hasKey("Player")){
+            playerUUID = compound.getUniqueId("Player");
+        }
+        if (compound.hasKey("items")) {
+            itemStackHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
+        }
+        if(compound.hasKey("redstone")){
+            hasRedstone = compound.getBoolean("redstone");
+        }
     }
 
     @Override
@@ -174,6 +199,8 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
         super.writeToNBT(compound);
         storage.writeToNBT(compound);
         compound.setUniqueId("Player", playerUUID);
+        compound.setBoolean("redstone", hasRedstone);
+        compound.setTag("items", itemStackHandler.serializeNBT());
         return compound;
     }
 
@@ -207,55 +234,49 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
         return this.playerProfile;
     }
 
-    public static void setProfileCache(PlayerProfileCache profileCacheIn)
-    {
+    public static void setProfileCache(PlayerProfileCache profileCacheIn) {
         profileCache = profileCacheIn;
         Main.logger.info("PROFILE CACHE FOUND");
     }
 
-    public static void setSessionService(MinecraftSessionService sessionServiceIn)
-    {
+    public static void setSessionService(MinecraftSessionService sessionServiceIn) {
         sessionService = sessionServiceIn;
         Main.logger.info("SESSION SERVER CONTACTED");
     }
 
-    public GameProfile updateGameprofile(GameProfile input)
-    {
-        if (input != null && !StringUtils.isNullOrEmpty(input.getName()))
-        {
-            if (input.isComplete() && input.getProperties().containsKey("textures"))
-            {
+    public GameProfile updateGameprofile(GameProfile input) {
+        if (input != null && !StringUtils.isNullOrEmpty(input.getName())) {
+            if (input.isComplete() && input.getProperties().containsKey("textures")) {
                 return input;
-            }
-            else if (profileCache != null && sessionService != null)
-            {
+            } else if (profileCache != null && sessionService != null) {
                 GameProfile gameprofile = profileCache.getGameProfileForUsername(input.getName());
 
-                if (gameprofile == null)
-                {
+                if (gameprofile == null) {
                     return input;
-                }
-                else
-                {
-                    Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
+                } else {
+                    Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object) null);
 
-                    if (property == null)
-                    {
+                    if (property == null) {
                         gameprofile = sessionService.fillProfileProperties(gameprofile, true);
                     }
 
                     return gameprofile;
                 }
-            }
-            else
-            {
+            } else {
                 return input;
             }
-        }
-        else
-        {
+        } else {
             return input;
         }
+    }
+
+    public String getPlayerName() {
+        return playerProfile.getName();
+    }
+
+    @Override
+    public ItemStackHandler getUpgradeStackHandler(){
+        return itemStackHandler;
     }
 
 

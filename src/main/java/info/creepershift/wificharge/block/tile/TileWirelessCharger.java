@@ -147,6 +147,9 @@ public class TileWirelessCharger extends TileEntityBase implements ITickable, IU
         if (compound.hasKey("items")) {
             itemStackHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
         }
+        if(compound.hasKey("redstone")){
+            hasRedstone = compound.getBoolean("redstone");
+        }
     }
 
     @Override
@@ -154,6 +157,7 @@ public class TileWirelessCharger extends TileEntityBase implements ITickable, IU
         super.writeToNBT(compound);
         storage.writeToNBT(compound);
         compound.setTag("items", itemStackHandler.serializeNBT());
+        compound.setBoolean("redstone", hasRedstone);
         return compound;
     }
 
