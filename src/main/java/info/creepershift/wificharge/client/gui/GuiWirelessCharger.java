@@ -15,6 +15,7 @@ public class GuiWirelessCharger extends GuiBase {
     public static final int WIDTH = 256;
     public static final int HEIGHT = 256;
     private final TileWirelessCharger tileWirelessCharger;
+    private EnergyDisplay energy;
     private static final ResourceLocation background = new ResourceLocation(Reference.MODID, "textures/gui/gui_wireless.png");
 
     public GuiWirelessCharger(EntityPlayer player, TileEntityBase tile){
@@ -25,9 +26,22 @@ public class GuiWirelessCharger extends GuiBase {
     }
 
     @Override
+    public void initGui() {
+        super.initGui();
+        this.energy = new EnergyDisplay(this.guiLeft + 56, this.guiTop +5 , this.tileWirelessCharger.storage);
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.energy.drawOverlay(mouseX, mouseY);
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        this.energy.draw();
     }
 
 }

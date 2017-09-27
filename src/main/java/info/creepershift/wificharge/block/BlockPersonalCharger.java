@@ -23,9 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class BlockPersonalCharger extends Block implements ITileEntityProvider{
-
-
+public class BlockPersonalCharger extends BlockBase implements ITileEntityProvider {
 
     public BlockPersonalCharger() {
         super(Material.ROCK);
@@ -53,7 +51,7 @@ public class BlockPersonalCharger extends Block implements ITileEntityProvider{
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof TilePersonalCharger && !worldIn.isRemote) {
             ((TilePersonalCharger) tile).setRedstone(worldIn.isBlockPowered(pos));
-            if(placer instanceof EntityPlayerMP) {
+            if (placer instanceof EntityPlayerMP) {
                 ((TilePersonalCharger) tile).setPlayer((EntityPlayerMP) placer);
             }
         }

@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class BlockWirelessCharger extends Block implements ITileEntityProvider {
+public class BlockWirelessCharger extends BlockBase implements ITileEntityProvider {
 
     public static final int GUI_ID = 1;
 

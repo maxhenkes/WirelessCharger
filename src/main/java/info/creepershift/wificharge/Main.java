@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Reference.MODID, version = Reference.VERSION)
+@Mod(modid = Reference.MODID, version = Reference.VERSION, acceptedMinecraftVersions = "1.12,1.12.1, 1.12.2")
 public class Main {
 
     @SidedProxy(clientSide = "info.creepershift.wificharge.ClientProxy", serverSide = "info.creepershift.wificharge.ServerProxy")
@@ -24,7 +24,6 @@ public class Main {
     public static boolean redstonefluxLoaded;
     public static boolean immersiveLoaded;
     public static boolean ic2Loaded;
-
 
     @EventHandler
     public void init(FMLInitializationEvent event) {

@@ -1,5 +1,10 @@
 package info.creepershift.wificharge.block.tile;
 
+import com.google.common.collect.Iterables;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftSessionService;
+import com.mojang.authlib.properties.Property;
+import info.creepershift.wificharge.Main;
 import info.creepershift.wificharge.config.Config;
 import info.creepershift.wificharge.util.EnergyHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,10 +12,14 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.server.management.PlayerList;
+import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -27,6 +36,9 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
     private boolean hasRedstone = false;
     private UUID playerUUID;
     private int hardLimit;
+    private GameProfile playerProfile;
+    private static PlayerProfileCache profileCache;
+    private static MinecraftSessionService sessionService;
 
     public TilePersonalCharger() {
         hardLimit = (int) (Config.personalMaxOutput * 0.1f);
@@ -62,7 +74,7 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
 
                         if (Config.rangeHardLimit && maxOut < hardLimit) {
                             maxOut = hardLimit;
-                            stored = (int)(stored * 0.1f);
+                            stored = (int) (stored * 0.1f);
                             reachedLimit = true;
                         }
 
@@ -77,7 +89,7 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
                     if (energy > 0) {
 
                         if (reachedLimit) {
-                            cost = (int)(cost/0.1f);
+                            cost = (int) (cost / 0.1f);
                         } else if (Config.personalRangeCost && !otherWorldCost) {
                             cost = (int) costByRange(player, energy, getPos());
                         } else if (otherWorldCost) {
@@ -146,6 +158,7 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
 
     public void setPlayer(EntityPlayerMP player) {
         playerUUID = player.getUniqueID();
+//        playerProfile = updateGameprofile(player.getGameProfile());
     }
 
     @Override
@@ -170,5 +183,79 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable {
         }
         return null;
     }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        this.writeToNBT(nbtTagCompound);
+        return new SPacketUpdateTileEntity(getPos(), 1, nbtTagCompound);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        this.readFromNBT(getUpdatePacket().getNbtCompound());
+    }
+
+    public GameProfile getProfile() {
+        return this.playerProfile;
+    }
+
+    public static void setProfileCache(PlayerProfileCache profileCacheIn)
+    {
+        profileCache = profileCacheIn;
+        Main.logger.info("PROFILE CACHE FOUND");
+    }
+
+    public static void setSessionService(MinecraftSessionService sessionServiceIn)
+    {
+        sessionService = sessionServiceIn;
+        Main.logger.info("SESSION SERVER CONTACTED");
+    }
+
+    public GameProfile updateGameprofile(GameProfile input)
+    {
+        if (input != null && !StringUtils.isNullOrEmpty(input.getName()))
+        {
+            if (input.isComplete() && input.getProperties().containsKey("textures"))
+            {
+                return input;
+            }
+            else if (profileCache != null && sessionService != null)
+            {
+                GameProfile gameprofile = profileCache.getGameProfileForUsername(input.getName());
+
+                if (gameprofile == null)
+                {
+                    return input;
+                }
+                else
+                {
+                    Property property = (Property) Iterables.getFirst(gameprofile.getProperties().get("textures"), (Object)null);
+
+                    if (property == null)
+                    {
+                        gameprofile = sessionService.fillProfileProperties(gameprofile, true);
+                    }
+
+                    return gameprofile;
+                }
+            }
+            else
+            {
+                return input;
+            }
+        }
+        else
+        {
+            return input;
+        }
+    }
+
 
 }

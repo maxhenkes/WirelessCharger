@@ -6,7 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class TileWirelessCharger extends TileEntityBase implements ITickable {
 
-    private final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.blockCapacity, Config.maxInput, Config.maxOutput);
+    public final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.blockCapacity, Config.maxInput, Config.maxOutput);
     private int counter = 0;
     private boolean hasRedstone = false;
 
@@ -39,6 +40,7 @@ public class TileWirelessCharger extends TileEntityBase implements ITickable {
                 counter++;
             } else {
                 getItems();
+                markDirty();
             }
         }
     }
@@ -143,6 +145,21 @@ public class TileWirelessCharger extends TileEntityBase implements ITickable {
         return !isInvalid() && playerIn.getDistanceSq(pos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
 
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
 
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbtTag = new NBTTagCompound();
+        this.writeToNBT(nbtTag);
+        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
+    }
 
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        this.readFromNBT(packet.getNbtCompound());
+    }
 }
