@@ -13,8 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiWirelessCharger extends GuiBase {
 
-    public static final int WIDTH = 256;
-    public static final int HEIGHT = 256;
     private final TileWirelessCharger tileWirelessCharger;
     private EnergyDisplay energy;
     private static final ResourceLocation background = new ResourceLocation(Reference.MODID, "textures/gui/gui_wireless.png");

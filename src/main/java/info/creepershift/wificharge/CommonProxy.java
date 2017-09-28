@@ -9,6 +9,7 @@ import info.creepershift.wificharge.client.gui.GuiProxy;
 import info.creepershift.wificharge.config.Config;
 import info.creepershift.wificharge.inventory.CreativeTabCustom;
 import info.creepershift.wificharge.item.ItemUpgradeRange;
+import info.creepershift.wificharge.network.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -50,6 +51,7 @@ public class CommonProxy {
         config = new Configuration(new File(directory.getPath(), "wificharge.cfg"));
         Config.readConfig();
         CreativeTabCustom.registerTab();
+        PacketHandler.registerMessages("wificharge");
     }
 
     public void init(FMLInitializationEvent event) {

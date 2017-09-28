@@ -52,10 +52,17 @@ public class BlockPersonalCharger extends BlockBase implements ITileEntityProvid
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         TileEntity tile = worldIn.getTileEntity(pos);
-        if (tile instanceof TilePersonalCharger && !worldIn.isRemote) {
-            ((TilePersonalCharger) tile).setRedstone(worldIn.isBlockPowered(pos));
-            if (placer instanceof EntityPlayerMP) {
-                ((TilePersonalCharger) tile).setPlayer((EntityPlayerMP) placer);
+        if (tile instanceof TilePersonalCharger) {
+            if (!worldIn.isRemote) {
+                ((TilePersonalCharger) tile).setRedstone(worldIn.isBlockPowered(pos));
+                if (placer instanceof EntityPlayerMP) {
+                    ((TilePersonalCharger) tile).setPlayer((EntityPlayer) placer);
+                }
+            } else {
+                if (placer instanceof EntityPlayer) {
+                    ((TilePersonalCharger) tile).setPlayer((EntityPlayer) placer);
+
+                }
             }
         }
     }

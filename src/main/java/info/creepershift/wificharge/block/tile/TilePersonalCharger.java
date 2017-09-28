@@ -37,6 +37,7 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable, IU
     public final ForgeEnergyImpl storage = new ForgeEnergyImpl(Config.personalCapacity, Config.personalMaxInput, Config.personalMaxOutput);
     private boolean hasRedstone = false;
     private UUID playerUUID;
+    private String playerName;
     private int hardLimit;
     private GameProfile playerProfile;
     private static PlayerProfileCache profileCache;
@@ -174,8 +175,9 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable, IU
         hasRedstone = redstone;
     }
 
-    public void setPlayer(EntityPlayerMP player) {
+    public void setPlayer(EntityPlayer player) {
         playerUUID = player.getUniqueID();
+        playerName = player.getName();
 //        playerProfile = updateGameprofile(player.getGameProfile());
     }
 
@@ -183,14 +185,17 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable, IU
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         storage.readFromNBT(compound);
-        if(compound.hasKey("Player")){
+        if (compound.hasKey("Player")) {
             playerUUID = compound.getUniqueId("Player");
         }
         if (compound.hasKey("items")) {
             itemStackHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
         }
-        if(compound.hasKey("redstone")){
+        if (compound.hasKey("redstone")) {
             hasRedstone = compound.getBoolean("redstone");
+        }
+        if (compound.hasKey("Name")) {
+            playerName = compound.getString("Name");
         }
     }
 
@@ -198,7 +203,12 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable, IU
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         storage.writeToNBT(compound);
-        compound.setUniqueId("Player", playerUUID);
+        if (playerUUID != null) {
+            compound.setUniqueId("Player", playerUUID);
+        }
+        if(playerName != null) {
+            compound.setString("Name", playerName);
+        }
         compound.setBoolean("redstone", hasRedstone);
         compound.setTag("items", itemStackHandler.serializeNBT());
         return compound;
@@ -271,11 +281,14 @@ public class TilePersonalCharger extends TileEntityBase implements ITickable, IU
     }
 
     public String getPlayerName() {
-        return playerProfile.getName();
+        if (playerName != null) {
+            return playerName;
+        }
+        return "UNKNOWN";
     }
 
     @Override
-    public ItemStackHandler getUpgradeStackHandler(){
+    public ItemStackHandler getUpgradeStackHandler() {
         return itemStackHandler;
     }
 
