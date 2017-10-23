@@ -1,0 +1,4 @@
+tile.wificharge.wirelesscharger.name=无限充电器
+tile.wificharge.personalcharger.name=玩家充电器
+itemGroup.creativetab=无限充电器选项
+item.wificharge.itemupgrade_range.name=范围升级
